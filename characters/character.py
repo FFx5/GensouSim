@@ -2,15 +2,17 @@ import random
 from datetime import timedelta
 
 from activities.activity import ACTIVITIES
+from characters.goal import Goal
 from characters.needs import Needs
 
 
 class Character:
-    def __init__(self, name, location=None, activity_preferences=None):
+    def __init__(self, name, location=None, activity_preferences=None, goals=None):
         self.name = name
         self.location = location
         self.activity = "Idle"
         self.activity_preferences = activity_preferences or {}
+        self.goals = goals or []
         self.activity_start_time = None
         self.activity_end_time = None
         self.travel_destination = None
@@ -18,6 +20,19 @@ class Character:
         self.needs = Needs()
         self.last_needs_update = None
         self.last_activity_weights = {}
+
+    def add_goal(self, goal):
+        """Add a goal to the character's goals."""
+
+        if not isinstance(goal, Goal):
+            raise TypeError("goal must be a Goal instance")
+
+        self.goals.append(goal)
+
+    def get_active_goals(self):
+        """Return the character's goals that are not yet completed."""
+
+        return [goal for goal in self.goals if not goal.completed]
 
     def choose_activity(self, current_time):
         """Choose an available activity based on preferences and current needs."""
