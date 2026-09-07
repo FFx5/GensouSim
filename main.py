@@ -25,7 +25,8 @@ reimu = Character(
         "Maintaining the shrine": 5,
         "Resting": 3,
         "Wandering": 2,
-        "Exploring": 1
+        "Exploring": 1,
+        "Talking": 1
     },
     goals=[
         Goal(
@@ -49,7 +50,8 @@ marisa = Character(
         "Exploring": 5,
         "Studying magic": 4,
         "Wandering": 3,
-        "Resting": 1
+        "Resting": 1,
+        "Talking": 1
     },
     goals=[
         Goal(
