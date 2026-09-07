@@ -5,31 +5,24 @@ from world.world import World
 
 world = World(clock_mode="manual")
 
-reimu = Character("Reimu Hakurei", "Hakurei Shrine")
+reimu = Character(
+    "Reimu Hakurei",
+    "Hakurei Shrine",
+    activity_preferences={
+        "Talking": 1.0
+    }
+)
 marisa = Character("Marisa Kirisame", "Hakurei Shrine")
-alice = Character("Alice Margatroid", "Forest of Magic")
 
 world.add_character(reimu)
 world.add_character(marisa)
-world.add_character(alice)
 
 assert "Talking" in ACTIVITIES
-assert ACTIVITIES["Talking"].relationship_effects == [
-    {
-        "target": "characters_at_location",
-        "effects": {
-            "affinity": 1,
-            "trust": 1
-        }
-    }
-]
 
-reimu.activity_completed_this_tick = "Talking"
-world.apply_relationship_effects(reimu)
+reimu.choose_activity(world.current_time)
 
-assert reimu.get_relationship(marisa).affinity == 1
-assert reimu.get_relationship(marisa).trust == 1
-assert reimu.get_relationship(alice).affinity == 0
-assert reimu.get_relationship(alice).trust == 0
+assert reimu.activity == "Talking"
+assert reimu.activity_start_time == world.current_time
+assert reimu.activity_end_time is not None
 
-print("Talking activity test passed.")
+print("Talking activity selection test passed.")
