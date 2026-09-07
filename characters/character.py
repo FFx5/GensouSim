@@ -18,42 +18,29 @@ class Character:
         self.last_activity_weights = {}
 
     def choose_activity(self, current_time):
-        """Choose an activity based on preferences and current needs."""
+        """Choose an available activity based on preferences and current needs."""
 
-        activities = list(self.activity_preferences.keys())
-        base_weights = list(self.activity_preferences.values())
+        weights = self.get_activity_weights()
 
-        adjusted_weights = []
+        available_activities = {
+            activity_name: weight
+            for activity_name, weight in weights.items()
+            if weight > 0
+        }
 
-        for activity_name, base_weight in zip(
-            activities,
-            base_weights
-        ):
-            activity_definition = ACTIVITIES[activity_name]
-
-            energy_multiplier = (
-                activity_definition.get_energy_multiplier(
-                    self.needs.energy
-                )
-            )
-
-            hunger_multiplier = (
-                activity_definition.get_hunger_multiplier(
-                    self.needs.hunger
-                )
-            )
-
-            adjusted_weight = (
-                base_weight
-                * energy_multiplier
-                * hunger_multiplier
-            )
-
-            adjusted_weights.append(adjusted_weight)
-
-        if self.needs.energy <= 0:
+        if self.needs.energy <= 0 and "Resting" in ACTIVITIES:
             self.activity = "Resting"
         else:
+            activities = list(available_activities.keys())
+            adjusted_weights = list(available_activities.values())
+
+            if not activities:
+                self.activity = "Idle"
+                self.activity_start_time = current_time
+                self.activity_end_time = None
+                self.last_activity_weights = weights
+                return
+
             self.activity = random.choices(
                 activities,
                 weights=adjusted_weights,
@@ -67,15 +54,19 @@ class Character:
             current_time + activity_definition.get_duration()
         )
 
-        self.last_activity_weights = self.get_activity_weights()
+        self.last_activity_weights = weights
 
     def get_activity_weights(self):
-        """Return the current adjusted selection weight for each activity."""
+        """Return current adjusted weights for activities available here."""
 
         weights = {}
 
         for activity_name, base_weight in self.activity_preferences.items():
             activity_definition = ACTIVITIES[activity_name]
+
+            if not activity_definition.is_available_at(self.location):
+                weights[activity_name] = 0
+                continue
 
             energy_multiplier = (
                 activity_definition.get_energy_multiplier(
@@ -183,7 +174,8 @@ class Character:
             or current_time >= self.activity_end_time
             or self.should_reconsider_activity(current_time)
         ):
+            previous_activity = self.activity
             self.choose_activity(current_time)
-            activity_changed = True
+            activity_changed = self.activity != previous_activity
 
         return activity_changed
