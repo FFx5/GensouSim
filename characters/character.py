@@ -13,6 +13,7 @@ class Character:
         self.activity = "Idle"
         self.activity_preferences = activity_preferences or {}
         self.goals = goals or []
+        self.relationships = {}
         self.activity_start_time = None
         self.activity_end_time = None
         self.last_completed_activity = None
@@ -30,6 +31,16 @@ class Character:
             raise TypeError("goal must be a Goal instance")
 
         self.goals.append(goal)
+
+    def add_relationship(self, character, value=0):
+        """Set a relationship value with another character."""
+
+        self.relationships[character.name] = value
+
+    def get_relationship(self, character):
+        """Return the relationship value with another character."""
+
+        return self.relationships.get(character.name, 0)
 
     def get_active_goals(self):
         """Return the character's goals that are not yet completed."""
