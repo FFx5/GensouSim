@@ -83,6 +83,15 @@ class World:
 
         return True
 
+    def apply_activity_effects(self, character):
+        """Apply world-state changes caused by a completed activity."""
+
+        if character.last_completed_activity == "Maintaining the shrine":
+            location = self.locations.get(character.location)
+
+            if location is not None:
+                location["maintenance_needed"] = False
+
     def check_goal_completion(self, character):
         """Check all of a character's active goals for completion."""
 
@@ -120,6 +129,7 @@ class World:
                     character.activity_end_time = current_time
 
             activity_changed = character.update(current_time)
+            self.apply_activity_effects(character)
 
             completed_goals = self.check_goal_completion(character)
 
