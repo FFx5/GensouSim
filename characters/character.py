@@ -46,6 +46,29 @@ class Character:
 
         return self.relationships.get(character.name, Relationship())
 
+    def modify_relationship(
+        self,
+        character,
+        affinity=0,
+        trust=0,
+        respect=0,
+        fear=0
+    ):
+        """Modify the relationship with another character."""
+
+        relationship = self.relationships.get(character.name)
+
+        if relationship is None:
+            relationship = Relationship()
+            self.relationships[character.name] = relationship
+
+        relationship.modify(
+            affinity=affinity,
+            trust=trust,
+            respect=respect,
+            fear=fear
+        )
+
     def get_active_goals(self):
         """Return the character's goals that are not yet completed."""
 
