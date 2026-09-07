@@ -19,7 +19,9 @@ class World:
         self.locations[name] = {
             "name": name,
             "connections": {},
-            "maintenance_needed": False
+            "maintenance_needed": False,
+            "maintenance_interval": None,
+            "last_maintenance_time": None
         }
 
     def connect_locations(self, first_location, second_location, travel_time=15):
@@ -83,14 +85,29 @@ class World:
 
         return True
 
+    def update_location_states(self):
+        """Update world-state conditions that change over simulation time."""
+
+        for location in self.locations.values():
+            interval = location["maintenance_interval"]
+            last_maintenance_time = location["last_maintenance_time"]
+
+            if (
+                interval is not None
+                and last_maintenance_time is not None
+                and self.current_time - last_maintenance_time >= interval
+            ):
+                location["maintenance_needed"] = True
+
     def apply_activity_effects(self, character):
         """Apply world-state changes caused by a completed activity."""
 
-        if character.last_completed_activity == "Maintaining the shrine":
+        if character.activity_completed_this_tick == "Maintaining the shrine":
             location = self.locations.get(character.location)
 
             if location is not None:
                 location["maintenance_needed"] = False
+                location["last_maintenance_time"] = self.current_time
 
     def check_goal_completion(self, character):
         """Check all goals that need completion or reactivation evaluation."""
@@ -107,6 +124,7 @@ class World:
         """Update the simulation."""
 
         current_time = self.clock.tick()
+        self.update_location_states()
 
         for character in self.characters.values():
             if (
