@@ -23,7 +23,7 @@ class Activity:
         self.energy_preference = energy_preference
         self.hunger_preference = hunger_preference
         self.allowed_locations = allowed_locations
-        self.world_effects = world_effects or {}
+        self.world_effects = world_effects or []
 
     def get_duration(self):
         """Return a random duration within the activity's duration range."""
@@ -103,10 +103,16 @@ ACTIVITIES = {
             "high": 0.7
         },
         ["Hakurei Shrine"],
-        {
-            "maintenance_needed": False,
-            "last_maintenance_time": "current_time"
-        }
+        [
+            {
+                "target": "location",
+                "location": None,
+                "effects": {
+                    "maintenance_needed": False,
+                    "last_maintenance_time": "current_time"
+                }
+            }
+        ]
     ),
     "Resting": Activity(
         "Resting",
