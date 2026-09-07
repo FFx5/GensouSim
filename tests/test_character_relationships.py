@@ -5,7 +5,7 @@ from characters.relationship import Relationship
 reimu = Character("Reimu Hakurei")
 marisa = Character("Marisa Kirisame")
 youmu = Character("Youmu Konpaku")
-
+alice = Character("Alice Margatroid")
 
 default_relationship = reimu.get_relationship(marisa)
 assert isinstance(default_relationship, Relationship)
@@ -60,13 +60,12 @@ reimu.modify_relationship(
 assert reimu.get_relationship(youmu).affinity == 2
 
 reimu.modify_relationship(
-    Character("Alice Margatroid"),
+    alice,
     affinity=3,
     trust=1
 )
 
-alice = Character("Alice Margatroid")
-assert reimu.get_relationship(alice).affinity == 0
-assert reimu.get_relationship(alice).trust == 0
+assert reimu.get_relationship(alice).affinity == 3
+assert reimu.get_relationship(alice).trust == 1
 
 print("Character relationship test passed.")
