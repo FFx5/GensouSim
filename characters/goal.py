@@ -25,9 +25,13 @@ class Goal:
         """Check whether the goal's condition has been satisfied."""
 
         if self.completed:
-            return True
+            if self.repeatable and self.condition is not None:
+                if not self.condition(character, world):
+                    self.completed = False
+            return False
 
         if self.condition is not None and self.condition(character, world):
             self.complete()
+            return True
 
-        return self.completed
+        return False
