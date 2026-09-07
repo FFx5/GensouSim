@@ -11,9 +11,15 @@ start_time = datetime(2026, 9, 7, 12, 0, tzinfo=ZoneInfo("Asia/Tokyo"))
 world.clock.set_manual_time(start_time)
 
 world.add_location("Test Location")
+world.add_location("Other Location")
+
 location = world.locations["Test Location"]
+other_location = world.locations["Other Location"]
+
 location["test_flag"] = False
 location["test_time"] = None
+other_location["test_flag"] = False
+other_location["test_time"] = None
 
 original_activity = ACTIVITIES.get("Test world effect")
 
@@ -36,7 +42,7 @@ ACTIVITIES["Test world effect"] = Activity(
     world_effects=[
         {
             "target": "location",
-            "location": None,
+            "location": "Other Location",
             "effects": {
                 "test_flag": True,
                 "test_time": "current_time"
@@ -51,8 +57,10 @@ try:
 
     world.apply_activity_effects(character)
 
-    assert location["test_flag"] is True
-    assert location["test_time"] == start_time
+    assert location["test_flag"] is False
+    assert location["test_time"] is None
+    assert other_location["test_flag"] is True
+    assert other_location["test_time"] == start_time
 
 finally:
     if original_activity is None:
@@ -60,4 +68,4 @@ finally:
     else:
         ACTIVITIES["Test world effect"] = original_activity
 
-print("Generic activity world effects test passed.")
+print("Targeted activity world effects test passed.")
