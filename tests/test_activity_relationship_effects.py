@@ -7,8 +7,12 @@ world = World(clock_mode="manual")
 
 reimu = Character("Reimu Hakurei", "Hakurei Shrine")
 marisa = Character("Marisa Kirisame", "Hakurei Shrine")
+youmu = Character("Youmu Konpaku", "Hakurei Shrine")
+alice = Character("Alice Margatroid", "Forest of Magic")
 world.add_character(reimu)
 world.add_character(marisa)
+world.add_character(youmu)
+world.add_character(alice)
 
 original_activity = ACTIVITIES.get("Test relationship effect")
 
@@ -30,7 +34,7 @@ ACTIVITIES["Test relationship effect"] = Activity(
     },
     relationship_effects=[
         {
-            "target": "Marisa Kirisame",
+            "target": "characters_at_location",
             "effects": {
                 "affinity": 2,
                 "trust": 1
@@ -44,13 +48,19 @@ try:
 
     world.apply_relationship_effects(reimu)
 
-    relationship = reimu.get_relationship(marisa)
-    assert relationship.affinity == 2
-    assert relationship.trust == 1
-    assert relationship.respect == 0
-    assert relationship.fear == 0
+    marisa_relationship = reimu.get_relationship(marisa)
+    youmu_relationship = reimu.get_relationship(youmu)
+    alice_relationship = reimu.get_relationship(alice)
+
+    assert marisa_relationship.affinity == 2
+    assert marisa_relationship.trust == 1
+    assert youmu_relationship.affinity == 2
+    assert youmu_relationship.trust == 1
+    assert alice_relationship.affinity == 0
+    assert alice_relationship.trust == 0
 
     assert marisa.get_relationship(reimu).affinity == 0
+    assert youmu.get_relationship(reimu).affinity == 0
 
 finally:
     if original_activity is None:
