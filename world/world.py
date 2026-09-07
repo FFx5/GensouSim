@@ -36,6 +36,15 @@ class World:
     def add_character(self, character):
         self.characters[character.name] = character
 
+    def get_characters_at_location(self, location, exclude=None):
+        """Return characters currently at a location, optionally excluding one."""
+
+        return [
+            character
+            for character in self.characters.values()
+            if character.location == location and character is not exclude
+        ]
+
     def move_character(self, character):
         """Begin travel to a random connected location."""
 
