@@ -27,7 +27,8 @@ reimu = Character(
         Goal(
             "Maintain the Hakurei Shrine",
             "Keep the shrine in good condition.",
-            priority=3
+            priority=3,
+            preferred_activities=["Maintaining the shrine"]
         )
     ]
 )
@@ -45,7 +46,8 @@ marisa = Character(
         Goal(
             "Study magic",
             "Continue improving magical knowledge.",
-            priority=3
+            priority=3,
+            preferred_activities=["Studying magic"]
         )
     ]
 )
