@@ -10,6 +10,9 @@ world.add_location("Hakurei Shrine")
 world.add_location("Human Village")
 world.add_location("Forest of Magic")
 
+world.connect_locations("Hakurei Shrine", "Human Village")
+world.connect_locations("Human Village", "Forest of Magic")
+
 reimu = Character(
     "Reimu Hakurei",
     "Hakurei Shrine",
