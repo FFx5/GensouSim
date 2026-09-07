@@ -11,7 +11,8 @@ class Activity:
         energy_change_per_hour,
         hunger_change_per_hour,
         energy_preference,
-        hunger_preference
+        hunger_preference,
+        allowed_locations=None
     ):
         self.name = name
         self.minimum_duration = minimum_duration
@@ -20,6 +21,7 @@ class Activity:
         self.hunger_change_per_hour = hunger_change_per_hour
         self.energy_preference = energy_preference
         self.hunger_preference = hunger_preference
+        self.allowed_locations = allowed_locations
 
     def get_duration(self):
         """Return a random duration within the activity's duration range."""
@@ -30,6 +32,14 @@ class Activity:
         )
 
         return timedelta(minutes=duration_minutes)
+
+    def is_available_at(self, location):
+        """Return whether the activity can be performed at the given location."""
+
+        if self.allowed_locations is None:
+            return True
+
+        return location in self.allowed_locations
 
     def get_energy_multiplier(self, energy):
         """Return an activity preference multiplier based on current energy."""
@@ -89,7 +99,8 @@ ACTIVITIES = {
             "low": 1.0,
             "medium": 0.9,
             "high": 0.7
-        }
+        },
+        ["Hakurei Shrine"]
     ),
     "Resting": Activity(
         "Resting",
@@ -157,7 +168,8 @@ ACTIVITIES = {
             "low": 1.0,
             "medium": 0.8,
             "high": 0.5
-        }
+        },
+        ["Forest of Magic"]
     ),
     "Eating": Activity(
         "Eating",
