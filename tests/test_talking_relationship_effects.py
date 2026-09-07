@@ -43,4 +43,18 @@ assert youmu_relationship.fear == 0
 assert reimu.get_relationship(reimu).affinity == 0
 assert reimu.get_relationship(reimu).trust == 0
 
+# A character alone at a location should not receive relationship effects.
+world = World(clock_mode="manual")
+alice = Character("Alice Margatroid", "Forest of Magic")
+world.add_character(alice)
+
+alice.activity = "Talking"
+alice.activity_start_time = world.current_time
+alice.activity_end_time = world.current_time + timedelta(minutes=15)
+
+world.clock.set_manual_time(alice.activity_end_time)
+world.tick()
+
+assert alice.relationships == {}
+
 print("Talking relationship effects test passed.")
