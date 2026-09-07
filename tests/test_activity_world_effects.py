@@ -33,10 +33,16 @@ ACTIVITIES["Test world effect"] = Activity(
         "medium": 1.0,
         "high": 1.0
     },
-    world_effects={
-        "test_flag": True,
-        "test_time": "current_time"
-    }
+    world_effects=[
+        {
+            "target": "location",
+            "location": None,
+            "effects": {
+                "test_flag": True,
+                "test_time": "current_time"
+            }
+        }
+    ]
 )
 
 try:
