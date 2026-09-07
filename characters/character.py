@@ -4,6 +4,7 @@ from datetime import timedelta
 from activities.activity import ACTIVITIES
 from characters.goal import Goal
 from characters.needs import Needs
+from characters.relationship import Relationship
 
 
 class Character:
@@ -33,14 +34,17 @@ class Character:
         self.goals.append(goal)
 
     def add_relationship(self, character, value=0):
-        """Set a relationship value with another character."""
+        """Set a relationship with another character."""
 
-        self.relationships[character.name] = value
+        if isinstance(value, Relationship):
+            self.relationships[character.name] = value
+        else:
+            self.relationships[character.name] = Relationship(affinity=value)
 
     def get_relationship(self, character):
-        """Return the relationship value with another character."""
+        """Return the relationship with another character."""
 
-        return self.relationships.get(character.name, 0)
+        return self.relationships.get(character.name, Relationship())
 
     def get_active_goals(self):
         """Return the character's goals that are not yet completed."""
