@@ -13,7 +13,8 @@ class Activity:
         energy_preference,
         hunger_preference,
         allowed_locations=None,
-        world_effects=None
+        world_effects=None,
+        relationship_effects=None
     ):
         self.name = name
         self.minimum_duration = minimum_duration
@@ -24,6 +25,7 @@ class Activity:
         self.hunger_preference = hunger_preference
         self.allowed_locations = allowed_locations
         self.world_effects = world_effects or []
+        self.relationship_effects = relationship_effects or []
 
     def get_duration(self):
         """Return a random duration within the activity's duration range."""
