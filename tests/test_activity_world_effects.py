@@ -18,6 +18,7 @@ other_location = world.locations["Other Location"]
 
 location["test_flag"] = False
 location["test_time"] = None
+location["current_location_flag"] = False
 other_location["test_flag"] = False
 other_location["test_time"] = None
 
@@ -47,6 +48,13 @@ ACTIVITIES["Test world effect"] = Activity(
                 "test_flag": True,
                 "test_time": "current_time"
             }
+        },
+        {
+            "target": "location",
+            "location": None,
+            "effects": {
+                "current_location_flag": True
+            }
         }
     ]
 )
@@ -59,6 +67,7 @@ try:
 
     assert location["test_flag"] is False
     assert location["test_time"] is None
+    assert location["current_location_flag"] is True
     assert other_location["test_flag"] is True
     assert other_location["test_time"] == start_time
 
