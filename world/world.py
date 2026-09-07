@@ -136,14 +136,36 @@ class World:
                 if target is None:
                     continue
 
-            else:
+                for state_name, effect in world_effect["effects"].items():
+                    if effect == "current_time":
+                        target[state_name] = self.current_time
+                    else:
+                        target[state_name] = effect
+
+    def apply_relationship_effects(self, character):
+        """Apply relationship effects declared by a completed activity."""
+
+        activity_name = character.activity_completed_this_tick
+
+        if activity_name is None:
+            return
+
+        activity_definition = ACTIVITIES.get(activity_name)
+
+        if activity_definition is None:
+            return
+
+        for relationship_effect in activity_definition.relationship_effects:
+            target_name = relationship_effect["target"]
+            target = self.characters.get(target_name)
+
+            if target is None or target is character:
                 continue
 
-            for state_name, effect in world_effect["effects"].items():
-                if effect == "current_time":
-                    target[state_name] = self.current_time
-                else:
-                    target[state_name] = effect
+            character.modify_relationship(
+                target,
+                **relationship_effect["effects"]
+            )
 
     def check_goal_completion(self, character):
         """Check all goals that need completion or reactivation evaluation."""
@@ -184,6 +206,7 @@ class World:
 
             activity_changed = character.update(current_time)
             self.apply_activity_effects(character)
+            self.apply_relationship_effects(character)
 
             completed_goals = self.check_goal_completion(character)
 
