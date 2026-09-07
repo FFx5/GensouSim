@@ -15,6 +15,7 @@ class Character:
         self.goals = goals or []
         self.activity_start_time = None
         self.activity_end_time = None
+        self.last_completed_activity = None
         self.travel_destination = None
         self.travel_end_time = None
         self.needs = Needs()
@@ -195,13 +196,21 @@ class Character:
             return False
 
         activity_changed = False
+        activity_completed = (
+            self.activity_end_time is not None
+            and current_time >= self.activity_end_time
+        )
 
         if (
             self.activity_end_time is None
-            or current_time >= self.activity_end_time
+            or activity_completed
             or self.should_reconsider_activity(current_time)
         ):
             previous_activity = self.activity
+
+            if activity_completed:
+                self.last_completed_activity = previous_activity
+
             self.choose_activity(current_time)
             activity_changed = self.activity != previous_activity
 
