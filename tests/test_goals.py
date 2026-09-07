@@ -20,6 +20,7 @@ reimu = Character(
 
 assert reimu.get_active_goals() == [reimu_goal]
 assert reimu_goal.completed is False
+assert reimu_goal.repeatable is False
 
 reimu_goal.complete()
 
@@ -31,13 +32,15 @@ marisa = Character("Marisa Kirisame")
 marisa_goal = Goal(
     "Study magic",
     "Continue improving magical knowledge.",
-    priority=2
+    priority=2,
+    repeatable=True
 )
 
 marisa.add_goal(marisa_goal)
 
 assert marisa.get_active_goals() == [marisa_goal]
 assert marisa_goal.priority == 2
+assert marisa_goal.repeatable is True
 
 try:
     marisa.add_goal("not a goal")
