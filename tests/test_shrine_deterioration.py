@@ -51,8 +51,11 @@ assert shrine["maintenance_needed"] is False
 assert shrine["last_maintenance_time"] == start_time
 assert reimu.goals[0].completed is True
 
-# Prevent Reimu's normal activity selection from changing the shrine state
-# while this test advances time to the deterioration boundary.
+# Cancel any new activity selected during the maintenance-completion tick
+# so it cannot affect the shrine state while this test advances time.
+reimu.activity = "Idle"
+reimu.activity_start_time = start_time
+reimu.activity_end_time = None
 reimu.activity_preferences = {}
 
 # The shrine should remain maintained until the full 24-hour interval passes.
