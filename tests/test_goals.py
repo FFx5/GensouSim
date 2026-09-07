@@ -33,7 +33,8 @@ marisa_goal = Goal(
     "Study magic",
     "Continue improving magical knowledge.",
     priority=2,
-    repeatable=True
+    repeatable=True,
+    condition=lambda character: character.location == "Forest of Magic"
 )
 
 marisa.add_goal(marisa_goal)
@@ -41,6 +42,21 @@ marisa.add_goal(marisa_goal)
 assert marisa.get_active_goals() == [marisa_goal]
 assert marisa_goal.priority == 2
 assert marisa_goal.repeatable is True
+
+marisa.location = "Forest of Magic"
+assert marisa_goal.check_completion(marisa) is True
+assert marisa_goal.completed is True
+assert marisa.get_active_goals() == []
+
+marisa.location = "Human Village"
+assert marisa_goal.check_completion(marisa) is False
+assert marisa_goal.completed is False
+assert marisa.get_active_goals() == [marisa_goal]
+
+marisa.location = "Forest of Magic"
+assert marisa_goal.check_completion(marisa) is True
+assert marisa_goal.completed is True
+assert marisa.get_active_goals() == []
 
 try:
     marisa.add_goal("not a goal")
