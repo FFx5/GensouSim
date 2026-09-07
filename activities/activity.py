@@ -201,5 +201,31 @@ ACTIVITIES = {
             "medium": 1.0,
             "high": 4.0
         }
+    ),
+    "Talking": Activity(
+        "Talking",
+        15,
+        60,
+        -1,
+        0,
+        {
+            "low": 0.5,
+            "medium": 1.0,
+            "high": 1.0
+        },
+        {
+            "low": 1.0,
+            "medium": 1.0,
+            "high": 1.0
+        },
+        relationship_effects=[
+            {
+                "target": "characters_at_location",
+                "effects": {
+                    "affinity": 1,
+                    "trust": 1
+                }
+            }
+        ]
     )
 }
