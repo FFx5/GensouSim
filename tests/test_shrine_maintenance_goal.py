@@ -1,5 +1,4 @@
 import sys
-from datetime import timedelta
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -40,7 +39,7 @@ assert world.locations["Hakurei Shrine"]["maintenance_needed"] is True
 assert reimu.goals[0].completed is False
 
 activity_end_time = reimu.activity_end_time
-world.clock.set_time(activity_end_time)
+world.clock.set_manual_time(activity_end_time)
 world.tick()
 
 assert reimu.last_completed_activity == "Maintaining the shrine"
