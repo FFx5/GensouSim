@@ -14,8 +14,15 @@ class World:
 
     def add_location(self, name):
         self.locations[name] = {
-            "name": name
+            "name": name,
+            "connections": set()
         }
+
+    def connect_locations(self, first_location, second_location):
+        """Create a two-way connection between two existing locations."""
+
+        self.locations[first_location]["connections"].add(second_location)
+        self.locations[second_location]["connections"].add(first_location)
 
     def add_character(self, character):
         self.characters[character.name] = character
@@ -26,7 +33,7 @@ class World:
         current_time = self.clock.tick()
 
         for character in self.characters.values():
-            activity_changed = character.update(current_time)
+            activity_changed = character.update(current_time, self)
 
             if activity_changed:
                 print(
