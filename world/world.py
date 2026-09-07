@@ -210,7 +210,7 @@ class World:
                 if not self.move_character(character):
                     character.activity_end_time = current_time
 
-            activity_changed = character.update(current_time)
+            activity_changed = character.update(current_time, self)
             self.apply_activity_effects(character)
             self.apply_relationship_effects(character)
 
