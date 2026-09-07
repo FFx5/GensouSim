@@ -82,6 +82,17 @@ class World:
 
         return True
 
+    def check_goal_completion(self, character):
+        """Check all of a character's active goals for completion."""
+
+        completed_goals = []
+
+        for goal in character.get_active_goals():
+            if goal.check_completion(character):
+                completed_goals.append(goal)
+
+        return completed_goals
+
     def tick(self):
         """Update the simulation."""
 
@@ -108,6 +119,14 @@ class World:
                     character.activity_end_time = current_time
 
             activity_changed = character.update(current_time)
+
+            completed_goals = self.check_goal_completion(character)
+
+            for goal in completed_goals:
+                print(
+                    f"[{current_time.strftime('%Y-%m-%d %H:%M:%S JST')}] "
+                    f"{character.name} completed goal: {goal.name}."
+                )
 
             if activity_changed:
                 print(
