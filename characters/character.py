@@ -35,6 +35,15 @@ class Character:
 
         return [goal for goal in self.goals if not goal.completed]
 
+    def get_goals_for_evaluation(self):
+        """Return goals that should be checked for completion or reactivation."""
+
+        return [
+            goal
+            for goal in self.goals
+            if not goal.completed or goal.repeatable
+        ]
+
     def choose_activity(self, current_time):
         """Choose an available activity based on preferences, needs, and goals."""
 
