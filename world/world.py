@@ -156,16 +156,22 @@ class World:
             return
 
         for relationship_effect in activity_definition.relationship_effects:
-            target_name = relationship_effect["target"]
-            target = self.characters.get(target_name)
+            target_type = relationship_effect["target"]
 
-            if target is None or target is character:
-                continue
+            if target_type == "characters_at_location":
+                targets = self.get_characters_at_location(
+                    character.location,
+                    exclude=character
+                )
+            else:
+                target = self.characters.get(target_type)
+                targets = [target] if target is not None else []
 
-            character.modify_relationship(
-                target,
-                **relationship_effect["effects"]
-            )
+            for target in targets:
+                character.modify_relationship(
+                    target,
+                    **relationship_effect["effects"]
+                )
 
     def check_goal_completion(self, character):
         """Check all goals that need completion or reactivation evaluation."""
