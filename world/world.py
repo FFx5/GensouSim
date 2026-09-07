@@ -18,7 +18,8 @@ class World:
     def add_location(self, name):
         self.locations[name] = {
             "name": name,
-            "connections": {}
+            "connections": {},
+            "maintenance_needed": False
         }
 
     def connect_locations(self, first_location, second_location, travel_time=15):
@@ -88,7 +89,7 @@ class World:
         completed_goals = []
 
         for goal in character.get_active_goals():
-            if goal.check_completion(character):
+            if goal.check_completion(character, self):
                 completed_goals.append(goal)
 
         return completed_goals
