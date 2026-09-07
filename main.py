@@ -2,6 +2,7 @@ import time
 
 from world.world import World
 from characters.character import Character
+from characters.goal import Goal
 
 
 world = World()
@@ -21,7 +22,14 @@ reimu = Character(
         "Resting": 3,
         "Wandering": 2,
         "Exploring": 1
-    }
+    },
+    goals=[
+        Goal(
+            "Maintain the Hakurei Shrine",
+            "Keep the shrine in good condition.",
+            priority=3
+        )
+    ]
 )
 
 marisa = Character(
@@ -32,7 +40,14 @@ marisa = Character(
         "Studying magic": 4,
         "Wandering": 3,
         "Resting": 1
-    }
+    },
+    goals=[
+        Goal(
+            "Study magic",
+            "Continue improving magical knowledge.",
+            priority=3
+        )
+    ]
 )
 
 world.add_character(reimu)
@@ -61,6 +76,17 @@ for character in world.characters.values():
         f"({character.location}) - "
         f"{character.activity}"
     )
+
+print()
+
+print("Goals:")
+
+for character in world.characters.values():
+    for goal in character.get_active_goals():
+        print(
+            f" - {character.name}: "
+            f"{goal.name} (Priority {goal.priority})"
+        )
 
 print()
 
