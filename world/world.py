@@ -70,6 +70,7 @@ class World:
         character.location = character.travel_destination
         character.travel_destination = None
         character.travel_end_time = None
+        character.activity_end_time = None
 
         print(
             f"[{self.current_time.strftime('%Y-%m-%d %H:%M:%S JST')}] "
