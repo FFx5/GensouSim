@@ -113,16 +113,28 @@ class World:
         if activity_definition is None:
             return
 
-        location = self.locations.get(character.location)
+        for world_effect in activity_definition.world_effects:
+            target_type = world_effect["target"]
 
-        if location is None:
-            return
+            if target_type == "location":
+                location_name = world_effect["location"]
 
-        for state_name, effect in activity_definition.world_effects.items():
-            if effect == "current_time":
-                location[state_name] = self.current_time
+                if location_name is None:
+                    location_name = character.location
+
+                target = self.locations.get(location_name)
+
+                if target is None:
+                    continue
+
             else:
-                location[state_name] = effect
+                continue
+
+            for state_name, effect in world_effect["effects"].items():
+                if effect == "current_time":
+                    target[state_name] = self.current_time
+                else:
+                    target[state_name] = effect
 
     def check_goal_completion(self, character):
         """Check all goals that need completion or reactivation evaluation."""
