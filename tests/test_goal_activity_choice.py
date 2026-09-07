@@ -29,4 +29,18 @@ weights = reimu.get_activity_weights()
 assert weights["Maintaining the shrine"] == 4
 assert weights["Wandering"] == 1
 
-print("Goal activity choice test passed.")
+completion_goal = Goal(
+    "Test completion",
+    "Complete when the character reaches the test location.",
+    condition=lambda character: character.location == "Human Village"
+)
+
+assert completion_goal.check_completion(reimu) is False
+assert completion_goal.completed is False
+
+reimu.location = "Human Village"
+
+assert completion_goal.check_completion(reimu) is True
+assert completion_goal.completed is True
+
+print("Goal activity choice and completion test passed.")
