@@ -16,6 +16,7 @@ class Character:
         self.activity_start_time = None
         self.activity_end_time = None
         self.last_completed_activity = None
+        self.activity_completed_this_tick = None
         self.travel_destination = None
         self.travel_end_time = None
         self.needs = Needs()
@@ -200,6 +201,7 @@ class Character:
         """Update the character's state for the current simulation time."""
 
         self.update_needs(current_time)
+        self.activity_completed_this_tick = None
 
         if self.activity == "Traveling":
             return False
@@ -219,6 +221,7 @@ class Character:
 
             if activity_completed:
                 self.last_completed_activity = previous_activity
+                self.activity_completed_this_tick = previous_activity
 
             self.choose_activity(current_time)
             activity_changed = self.activity != previous_activity
