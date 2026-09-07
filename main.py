@@ -11,6 +11,8 @@ world.add_location("Hakurei Shrine")
 world.add_location("Human Village")
 world.add_location("Forest of Magic")
 
+world.locations["Hakurei Shrine"]["maintenance_needed"] = True
+
 world.connect_locations("Hakurei Shrine", "Human Village")
 world.connect_locations("Human Village", "Forest of Magic")
 
@@ -28,7 +30,11 @@ reimu = Character(
             "Maintain the Hakurei Shrine",
             "Keep the shrine in good condition.",
             priority=3,
-            preferred_activities=["Maintaining the shrine"]
+            preferred_activities=["Maintaining the shrine"],
+            condition=lambda character, world: (
+                world.locations[character.location]["maintenance_needed"] is False
+                and character.last_completed_activity == "Maintaining the shrine"
+            )
         )
     ]
 )
