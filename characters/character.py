@@ -22,7 +22,7 @@ class Character:
         self.last_activity_weights = {}
 
     def add_goal(self, goal):
-        """Add a goal to the character's goals."""
+        """Add the character's goal."""
 
         if not isinstance(goal, Goal):
             raise TypeError("goal must be a Goal instance")
@@ -35,7 +35,7 @@ class Character:
         return [goal for goal in self.goals if not goal.completed]
 
     def choose_activity(self, current_time):
-        """Choose an available activity based on preferences and current needs."""
+        """Choose an available activity based on preferences, needs, and goals."""
 
         weights = self.get_activity_weights()
 
@@ -97,10 +97,17 @@ class Character:
                 )
             )
 
+            goal_multiplier = 1
+
+            for goal in self.get_active_goals():
+                if activity_name in goal.preferred_activities:
+                    goal_multiplier += goal.priority
+
             weights[activity_name] = (
                 base_weight
                 * energy_multiplier
                 * hunger_multiplier
+                * goal_multiplier
             )
 
         return weights
