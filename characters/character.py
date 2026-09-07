@@ -1,4 +1,5 @@
 import random
+from datetime import timedelta
 
 from activities.activity import ACTIVITIES
 from characters.needs import Needs
@@ -96,8 +97,16 @@ class Character:
 
         return weights
 
-    def should_reconsider_activity(self):
+    def should_reconsider_activity(self, current_time):
         """Return whether the character should reconsider their current activity."""
+
+        if self.activity_start_time is None:
+            return False
+
+        minimum_activity_time = timedelta(minutes=30)
+
+        if current_time - self.activity_start_time < minimum_activity_time:
+            return False
 
         current_weights = self.get_activity_weights()
 
@@ -172,7 +181,7 @@ class Character:
         if (
             self.activity_end_time is None
             or current_time >= self.activity_end_time
-            or self.should_reconsider_activity()
+            or self.should_reconsider_activity(current_time)
         ):
             self.choose_activity(current_time)
             activity_changed = True
