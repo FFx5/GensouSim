@@ -1,3 +1,5 @@
+import random
+
 from activities.activity import ACTIVITIES
 from characters.character import Character
 from world.world import World
@@ -9,7 +11,11 @@ reimu = Character(
     "Reimu Hakurei",
     "Hakurei Shrine",
     activity_preferences={
-        "Talking": 1.0
+        "Maintaining the shrine": 5,
+        "Resting": 3,
+        "Wandering": 2,
+        "Exploring": 1,
+        "Talking": 1
     }
 )
 marisa = Character("Marisa Kirisame", "Hakurei Shrine")
@@ -19,6 +25,7 @@ world.add_character(marisa)
 
 assert "Talking" in ACTIVITIES
 
+random.seed(2)
 reimu.choose_activity(world.current_time)
 
 assert reimu.activity == "Talking"
