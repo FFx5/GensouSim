@@ -83,10 +83,10 @@ class Character:
             if not goal.completed or goal.repeatable
         ]
 
-    def choose_activity(self, current_time):
+    def choose_activity(self, current_time, world=None):
         """Choose an available activity based on preferences, needs, and goals."""
 
-        weights = self.get_activity_weights()
+        weights = self.get_activity_weights(world)
 
         available_activities = {
             activity_name: weight
@@ -122,7 +122,7 @@ class Character:
 
         self.last_activity_weights = weights
 
-    def get_activity_weights(self):
+    def get_activity_weights(self, world=None):
         """Return current adjusted weights for activities available here."""
 
         weights = {}
@@ -131,6 +131,17 @@ class Character:
             activity_definition = ACTIVITIES[activity_name]
 
             if not activity_definition.is_available_at(self.location):
+                weights[activity_name] = 0
+                continue
+
+            if (
+                activity_name == "Talking"
+                and world is not None
+                and not world.get_characters_at_location(
+                    self.location,
+                    exclude=self
+                )
+            ):
                 weights[activity_name] = 0
                 continue
 
@@ -161,7 +172,7 @@ class Character:
 
         return weights
 
-    def should_reconsider_activity(self, current_time):
+    def should_reconsider_activity(self, current_time, world=None):
         """Return whether the character should reconsider their current activity."""
 
         if self.activity_start_time is None:
@@ -172,7 +183,7 @@ class Character:
         if current_time - self.activity_start_time < minimum_activity_time:
             return False
 
-        current_weights = self.get_activity_weights()
+        current_weights = self.get_activity_weights(world)
 
         current_weight = current_weights.get(self.activity, 0)
 
@@ -235,7 +246,7 @@ class Character:
 
         self.last_needs_update = current_time
 
-    def update(self, current_time):
+    def update(self, current_time, world=None):
         """Update the character's state for the current simulation time."""
 
         self.update_needs(current_time)
@@ -253,7 +264,7 @@ class Character:
         if (
             self.activity_end_time is None
             or activity_completed
-            or self.should_reconsider_activity(current_time)
+            or self.should_reconsider_activity(current_time, world)
         ):
             previous_activity = self.activity
 
@@ -261,7 +272,7 @@ class Character:
                 self.last_completed_activity = previous_activity
                 self.activity_completed_this_tick = previous_activity
 
-            self.choose_activity(current_time)
+            self.choose_activity(current_time, world)
             activity_changed = self.activity != previous_activity
 
         return activity_changed
