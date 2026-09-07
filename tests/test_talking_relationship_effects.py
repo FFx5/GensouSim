@@ -22,7 +22,7 @@ reimu.activity = "Talking"
 reimu.activity_start_time = world.current_time
 reimu.activity_end_time = world.current_time + timedelta(minutes=15)
 
-world.clock.current_time = reimu.activity_end_time
+world.clock.set_manual_time(reimu.activity_end_time)
 world.tick()
 
 relationship = reimu.get_relationship(marisa)
