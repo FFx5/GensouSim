@@ -1,6 +1,7 @@
 import random
 from datetime import timedelta
 
+from activities.activity import ACTIVITIES
 from simulation.clock import SimulationClock
 
 
@@ -100,14 +101,28 @@ class World:
                 location["maintenance_needed"] = True
 
     def apply_activity_effects(self, character):
-        """Apply world-state changes caused by a completed activity."""
+        """Apply effects declared by a completed activity."""
 
-        if character.activity_completed_this_tick == "Maintaining the shrine":
-            location = self.locations.get(character.location)
+        activity_name = character.activity_completed_this_tick
 
-            if location is not None:
-                location["maintenance_needed"] = False
-                location["last_maintenance_time"] = self.current_time
+        if activity_name is None:
+            return
+
+        activity_definition = ACTIVITIES.get(activity_name)
+
+        if activity_definition is None:
+            return
+
+        location = self.locations.get(character.location)
+
+        if location is None:
+            return
+
+        for state_name, effect in activity_definition.world_effects.items():
+            if effect == "current_time":
+                location[state_name] = self.current_time
+            else:
+                location[state_name] = effect
 
     def check_goal_completion(self, character):
         """Check all goals that need completion or reactivation evaluation."""
