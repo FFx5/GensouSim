@@ -19,13 +19,13 @@ class Goal:
 
         self.completed = True
 
-    def check_completion(self, character):
+    def check_completion(self, character, world=None):
         """Check whether the goal's condition has been satisfied."""
 
         if self.completed:
             return True
 
-        if self.condition is not None and self.condition(character):
+        if self.condition is not None and self.condition(character, world):
             self.complete()
 
         return self.completed
