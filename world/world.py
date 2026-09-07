@@ -93,11 +93,11 @@ class World:
                 location["maintenance_needed"] = False
 
     def check_goal_completion(self, character):
-        """Check all of a character's active goals for completion."""
+        """Check all goals that need completion or reactivation evaluation."""
 
         completed_goals = []
 
-        for goal in character.get_active_goals():
+        for goal in character.get_goals_for_evaluation():
             if goal.check_completion(character, self):
                 completed_goals.append(goal)
 
